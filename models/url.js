@@ -1,4 +1,3 @@
-const { Timestamp } = require("bson");
 const mongoos = require("mongoose");
 
 const urlSchema = new mongoos.Schema({
@@ -22,3 +21,4 @@ const urlSchema = new mongoos.Schema({
 
 const URL = mongoos.model("url", urlSchema);
 module.exports = URL;
+
