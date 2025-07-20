@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build: .  # This means build using the Dockerfile in the current directory
+    depends_on:
+      - redis
+      - mongo
+      - kafka
+    ports:
+      - "8001:8001"
+    networks:
+      - url-net
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - url-net
+
+  mongo:
+    image: mongo:latest
+    restart: unless-stopped
+    networks:
+      - url-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.3
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - url-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.3  # ✅ use older version to avoid KRaft requirements
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - url-net
+
+networks:
+  url-net:
+    driver: bridge

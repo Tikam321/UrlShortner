@@ -7,7 +7,10 @@ const {connectMongoDB} = require("./mongoConnection");
 const URL = require("./models/url");
 const {start} = require("./kafkaConfig/consumer");
 start();
-connectMongoDB("mongodb://127.0.0.1:27017/short-url");
+// connectMongoDB("mongodb://127.0.0.1:27017/short-url");
+
+//for contaienr 
+connectMongoDB("mongodb://mongo:27017/short-url");
 
 app.use(express.json());
 app.use("/url", urlRouter);
